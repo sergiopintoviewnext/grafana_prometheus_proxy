@@ -1,0 +1,12 @@
+[Unit]
+Description=Prometheus Node Exporter
+After=network-online.target
+
+[Service]
+User={{ usuario }}
+Group={{ usuario }}
+Type=simple
+ExecStart={{ path_binarios }}/node_exporter
+
+[Install]
+WantedBy=multi-user.target
