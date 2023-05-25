@@ -1,0 +1,36 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: PROMETHEUS
+  gather_facts: true
+  vars_files:
+    - main.yml
+  tasks:
+    - name: Iniciar servicio 
+      ansible.builtin.service:
+        name: "{{ servicio }}"
+        state: started
+      register: status
+  
+
+    - name: Comprobar servicio
+      ansible.builtin.assert:
+        that: not status.changed
+        success_msg: "{{ servicio }} corriendo"
+        fail_msg: "{{ servicio }} no esta corriendo"
+
+    
+    - name: Leer fichero config
+      ansible.builtin.command:
+        cmd: "cat {{ path_config }}/prometheus.yml"
+      register: texto
+
+
+    - name: Comprobar lineas en fichero
+      ansible.builtin.assert:
+        that: "'- targets: [\"{{ item }}:9100\"]' in texto.stdout"
+        success_msg: '- targets: ["{{ item }}:9100"] aparece en el fichero'
+        fail_msg: '- targets: ["{{ item }}:9100"] NO aparece en el fichero'
+      with_items: "{{ groups['NODE_EXPORTER'] }}"
+...

@@ -1,0 +1,7 @@
+---
+
+servicio: prometheus
+
+path_config: /etc/prometheus
+
+...

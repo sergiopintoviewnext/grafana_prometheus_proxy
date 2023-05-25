@@ -1,0 +1,12 @@
+---
+
+- name: Añadir nuevo nodo a prometheus
+  ansible.builtin.lineinfile:
+    path: "{{ path_config }}/prometheus.yml"
+    insertafter: "#targets node_exporter"
+    search_string: "#targets node_exporter"
+    line: '    - targets: ["{{ item }}:9100"]'
+  with_items: "{{ groups['NODE_EXPORTER'] }}"
+  notify: Reiniciar prometheus
+
+...
