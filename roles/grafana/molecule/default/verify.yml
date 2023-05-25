@@ -1,0 +1,36 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: true
+  vars:
+    - servicio: grafana-server
+  tasks:
+    - name: Iniciar servicio {{ servicio }}
+      ansible.builtin.service:
+        name: "{{ servicio }}"
+        state: started
+      register: status
+  
+
+    - name: Comprobar servicio
+      ansible.builtin.assert:
+        that: not status.changed
+        success_msg: "{{ servicio }} corriendo"
+        fail_msg: "{{ servicio }} no esta corriendo"
+
+
+    - name: Comprobar conexion a pagina de {{ servicio }}
+      ansible.builtin.uri:
+        url: http://localhost:3000
+      register: pagina
+
+
+    - name: Comprobar codigo http
+      ansible.builtin.assert:
+        that: pagina.status == 200
+        success_msg: "Conexion a pagina {{ servicio }} OK"
+        fail_msg: "Error en conexion a pagina {{ servicio }} ({{ pagina.status }})"
+
+...

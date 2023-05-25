@@ -1,0 +1,10 @@
+---
+
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include grafana"
+      include_role:
+        name: "grafana"
+
+...

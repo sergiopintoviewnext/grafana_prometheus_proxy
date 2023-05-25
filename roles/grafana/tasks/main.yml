@@ -1,0 +1,47 @@
+---
+
+- name: Añadir repo Grafana en Rhel
+  when: ansible_os_family == "RedHat"
+  block:
+  - name: Añadir repo grafana
+    ansible.builtin.yum_repository:
+      name: grafana
+      description: grafana repo
+      baseurl: https://rpm.grafana.com
+      gpgcheck: false
+
+
+- name: Añadir repo Grafana en Debian
+  when: ansible_os_family == "Debian"
+  block:
+  - name: Instalar gnupg
+    ansible.builtin.apt:
+      name: gnupg
+      state: present
+      update_cache: true
+
+  - name: Agregar clave GPG de Grafana Debian
+    ansible.builtin.apt_key:
+      url: https://apt.grafana.com/gpg-full.key
+      state: present
+
+  - name: Añadir repositorio Grafana Debian
+    ansible.builtin.apt_repository:
+      repo: deb https://apt.grafana.com stable main
+      state: present
+     
+
+- name: Instalar Grafana
+  ansible.builtin.package:
+    name: grafana
+    state: present
+    update_cache: true
+
+
+- name: Habilitar servicio Grafana
+  ansible.builtin.service:
+    name: grafana-server
+    state: started
+    enabled: true
+
+...
