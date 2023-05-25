@@ -5,8 +5,10 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: ubi8
+  - name: server
     image: registry.access.redhat.com/ubi8/ubi-init
+    networks:
+      - name: "red_prometheus"    
     tmpfs:
       - /run
       - /tmp
@@ -15,16 +17,12 @@ platforms:
     capabilities:
       - SYS_ADMIN
     command: "/usr/sbin/init"
-    pre_build_image: true
-  - name: Debian
-    image: docker.io/debian:latest
+    pre_build_image: true         
 provisioner:
-  name: ansible  
+  name: ansible
 verifier:
   name: ansible
 lint: |
   set -e
   yamllint .
   ansible-lint .
-
-...
