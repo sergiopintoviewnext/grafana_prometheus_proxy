@@ -44,4 +44,13 @@
     state: started
     enabled: true
 
+
+- name: Permitir trafico por puerto de grafana
+  ansible.posix.firewalld:
+    port: 3000/tcp
+    state: enabled
+    permanent: true
+    immediate: true
+  when: ansible_os_family == "RedHat"    
+
 ...
