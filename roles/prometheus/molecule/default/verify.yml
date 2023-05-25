@@ -1,0 +1,47 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Iniciar servicio 
+      ansible.builtin.service:
+        name: prometheus
+        state: started
+      register: status
+  
+
+    - name: Comprobar servicio
+      ansible.builtin.assert:
+        that: not status.changed
+        success_msg: "prometheus corriendo"
+        fail_msg: "prometheus no esta corriendo"
+
+
+    - name: Comprobar conexion a pagina de prometheus
+      ansible.builtin.uri:
+        url: http://localhost:9090
+      register: pagina
+
+
+    - name: Comprobar codigo http
+      ansible.builtin.assert:
+        that: pagina.status == 200
+        success_msg: "Conexion a pagina prometheus OK"
+        fail_msg: "Error en conexion a pagina prometheus"
+
+
+    - name: Comprobar metricas
+      ansible.builtin.uri:
+        url: http://localhost:9090/metrics
+      register: metricas
+
+
+    - name: Comprobar codigo http
+      ansible.builtin.assert:
+        that: metricas.status == 200
+        success_msg: "obtencion de metricas OK"
+        fail_msg: "Error en obtencion de metricas"       
+
+...

@@ -1,0 +1,13 @@
+---
+
+usuario: prometheus
+
+
+version_prometheus: 2.44.0
+
+
+path_binarios: /usr/local/bin
+path_config: /etc/prometheus
+path_storage: /var/lib/prometheus
+
+...

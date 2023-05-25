@@ -1,0 +1,84 @@
+---
+
+- name: Crear usuario prometheus
+  ansible.builtin.user:
+    name: "{{ usuario }}"
+
+
+- name: Creacion carpetas /etc/prometheus y /var/lib/prometheus
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: '0755'
+    state: directory
+  with_items: 
+    - { path: "{{ path_config }}",
+        owner: root,
+        group: root }
+
+    - { path: "{{ path_storage }}",
+        owner: prometheus,
+        group: prometheus }
+
+
+- name: Descarga de prometheus
+  ansible.builtin.unarchive:
+    src: "https://github.com/prometheus/prometheus/releases/download/v{{ version_prometheus }}/prometheus-{{ version_prometheus }}.linux-amd64.tar.gz"
+    dest: /tmp/
+    remote_src: true
+
+
+- name: Copiar binarios en {{ path_binarios }}
+  ansible.builtin.copy:
+    src: "/tmp/prometheus-{{ version_prometheus }}.linux-amd64/{{ item }}"
+    dest: "{{ path_binarios }}"
+    owner: root
+    group: root
+    mode: '0755'
+    remote_src: true
+  with_items: 
+    - prometheus
+    - promtool
+
+
+- name: Fichero de configuracion
+  ansible.builtin.template:
+    src: prometheus.yml.j2
+    dest: "{{ path_config }}/prometheus.yml"
+    owner: root
+    group: root
+    mode: '0755'
+  notify: Reiniciar servicio
+
+
+- name: Creacion servicio prometheus
+  ansible.builtin.template:
+    src: prometheus.service.j2
+    dest: /etc/systemd/system/prometheus.service
+    owner: root
+    group: root
+    mode: '0755'
+
+
+- name: Reload daemon
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+
+- name: Levantar servicio prometheus
+  ansible.builtin.service:
+    name: prometheus
+    state: started
+    enabled: true
+
+
+- name: Permitir trafico por puerto de prometheus
+  ansible.posix.firewalld:
+    port: 9090/tcp
+    state: enabled
+    permanent: true
+    immediate: true
+  when: ansible_os_family == "RedHat"
+  
+...
