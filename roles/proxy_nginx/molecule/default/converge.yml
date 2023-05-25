@@ -1,0 +1,10 @@
+---
+
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include proxy_nginx"
+      include_role:
+        name: "proxy_nginx"
+
+...

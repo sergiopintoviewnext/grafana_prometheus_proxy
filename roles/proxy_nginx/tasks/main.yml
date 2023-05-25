@@ -1,0 +1,35 @@
+---
+
+- name: Instalar nginx
+  ansible.builtin.package:
+    name: nginx
+    state: present
+    update_cache: true
+
+
+- name: Copiar fichero conf de nginx
+  ansible.builtin.template:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reiniciar nginx
+
+
+- name: Iniciar servicio
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true
+
+
+- name: Permitir conexiones http
+  ansible.posix.firewalld:
+    service: http
+    state: enabled
+    permanent: true
+    immediate: true
+  when: ansible_os_family == "RedHat"
+
+...
