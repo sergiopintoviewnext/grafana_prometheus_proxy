@@ -16,19 +16,19 @@
       ansible.builtin.assert:
         that: not nginx.changed
         success_msg: "nginx corriendo"
-        fail_msg: "error con serivcio nginx"
+        fail_msg: "error con servicio nginx"
 
 
-    - name: Comprobar conexion a pagina de wordpress
+    - name: Comprobar conexion a proxy para comprobar redireccion
       ansible.builtin.uri:
-        url: http://localhost/wordpress/
-      register: pagina_wordpress
+        url: http://localhost/
+      register: pagina
 
 
     - name: Comprobar codigo http
       ansible.builtin.assert:
-        that: pagina_wordpress.status == 200
-        success_msg: "Conexion correcta a pagina de wordpress"
-        fail_msg: "Conexion incorrecta ({{ pagina_wordpress.status }})"
+        that: pagina.status == 200
+        success_msg: "Conexion correcta a pagina "
+        fail_msg: "Conexion incorrecta ({{ pagina.status }})"
 
 ...
