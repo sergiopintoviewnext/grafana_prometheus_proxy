@@ -12,7 +12,7 @@
   roles:
     - role: prometheus
     - role: añadir_nodo
-    - grafana
+    - role: grafana
       
 - name: Instalación y configuracion proxy nginx
   hosts: PROXY
