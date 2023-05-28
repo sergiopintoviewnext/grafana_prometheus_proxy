@@ -7,7 +7,7 @@ Este rol realiza la instalación y configuración de nginx como proxy inverso pa
 ## VARIABLES
 
 
-    - servidor_http: se indicará la dirección al servidor al que se quiere redirigir el trafico entrando indicando el puerto del otro servidor. Ejemplo: http://ip_address:8080. En este caso la ip_address será el servidor grafana.
+- **servidor_http**: se indicará la dirección al servidor al que se quiere redirigir el trafico entrando indicando el puerto del otro servidor. Ejemplo: http://ip_address:8080. En este caso la ip_address será el servidor grafana.
 
 
 ## TEMPLATES
