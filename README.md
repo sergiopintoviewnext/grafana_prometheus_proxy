@@ -95,7 +95,7 @@ Otro ejemplo (servidor grafana en otro host):
       hosts: NODE_EXPORTER
       become: true
       roles:
-        - role: node_exporter
+        - role: node-exporter
 
     - name: Instalación y configuracion Prometheus
       hosts: PROMETHEUS
