@@ -1,0 +1,23 @@
+---
+
+- name: Instalación node_exporter
+  hosts: NODE_EXPORTER
+  become: true
+  roles:
+    - role: node_exporter
+
+- name: Instalación y configuracion Prometheus
+  hosts: PROMETHEUS
+  become: true
+  roles:
+    - role: prometheus
+    - role: añadir_nodo
+    - grafana
+      
+- name: Instalación y configuracion proxy nginx
+  hosts: PROXY
+  become: true
+  roles:
+    - role: proxy_nginx
+
+...
