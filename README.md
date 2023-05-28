@@ -27,10 +27,27 @@ En cada rol existe un README.md donde se explica particularmente cada uno de ell
 Para la correcta ejecución de estos roles se debe tener en el inventario un grupo llamado 'NODE_EXPORTER' con los hosts donde se instalará node_exporter y que posteriormente se agregarán al servidor Prometheus. Este grupo de inventario es necesario para la ejecución del rol 'añadir_nodo' ya que el rol lo utiliza para identificar los hosts a agregar al servidor prometheus.
 
 
- Ejemplo de inventario:
+Ejemplo de inventario:
 
 		[PROMETHEUS]
 		server
+
+		[NODE_EXPORTER]
+		nodo1
+		nodo2
+		nodo3
+		
+		[PROXY]
+		proxy
+
+
+Otro ejemplo:
+
+		[PROMETHEUS]
+		server
+
+    [GRAFANA]
+    grafana
 
 		[NODE_EXPORTER]
 		nodo1
@@ -46,28 +63,58 @@ Para la correcta ejecución de estos roles se debe tener en el inventario un gru
 ## PLAYBOOK
 
 
-Ejemplo de playbook.yml para la ejecución de estos roles:
+Ejemplo de playbook.yml para la ejecución de estos roles (grafana y prometheus en el mismo servidor):
 
 
-        - name: Instalación node_exporter
-          hosts: NODE_EXPORTER
-          become: true
-          roles:
-            - role: node_exporter
+    - name: Instalación node_exporter
+      hosts: NODE_EXPORTER
+      become: true
+      roles:
+        - role: node_exporter
 
-        - name: Instalación y configuracion Prometheus
-          hosts: PROMETHEUS
-          become: true
-          roles:
-            - role: prometheus
-            - role: añadir_nodo
-            - grafana
+    - name: Instalación y configuracion Prometheus
+      hosts: PROMETHEUS
+      become: true
+      roles:
+        - role: prometheus
+        - role: añadir_nodo
+        - grafana
          
 		- name: Instalación y configuracion proxy nginx
-          hosts: PROXY
-          become: true
-          roles:
-            - role: proxy_nginx
+      hosts: PROXY
+      become: true
+      roles:
+        - role: proxy_nginx
+
+
+
+Otro ejemplo (servidor grafana en otro host):
+
+
+    - name: Instalación node_exporter
+      hosts: NODE_EXPORTER
+      become: true
+      roles:
+        - role: node_exporter
+
+    - name: Instalación y configuracion Prometheus
+      hosts: PROMETHEUS
+      become: true
+      roles:
+        - role: prometheus
+        - role: añadir_nodo
+
+    - name: Instalación grafana
+      hosts: GRAFANA
+      become: true
+      roles:
+        - grafana
+
+		- name: Instalación y configuracion proxy nginx
+      hosts: PROXY
+      become: true
+      roles:
+        - role: proxy_nginx
 
 
     
