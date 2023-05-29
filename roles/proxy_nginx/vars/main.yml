@@ -1,5 +1,5 @@
 ---
 
-servidor_http: http://server:3000
+servidor_http: http://localhost:3000
 
 ...
