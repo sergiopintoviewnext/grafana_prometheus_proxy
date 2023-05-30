@@ -4,13 +4,23 @@
   hosts: all
   become: true
   pre_tasks:
-    - name: Instalar firewalld y pip3
-      ansible.builtin.package:
-        name: "{{ item }}"
-        state: present
-      with_items:
-        - firewalld
-        - python3-firewall
+    - name: Preparando firewall rhel
+      when: ansible_os_family == "RedHat"      
+      block:  
+      - name: Instalar firewalld
+        ansible.builtin.yum:
+          name: "{{ item }}"
+          state: present
+          update_cache: true
+        with_items:
+          - firewalld
+          - python3-firewall
+
+      - name: Habilitar servicio firewalld
+        ansible.builtin.service:
+          name: firewalld
+          state: started
+          enabled: true
 
 - name: Instalación node_exporter
   hosts: NODE_EXPORTER
