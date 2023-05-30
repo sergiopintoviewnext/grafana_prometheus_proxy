@@ -1,16 +1,16 @@
 ---
 
-- name: Pretask Rhel
+- name: Pre_tasks Rhel
   hosts: all
   become: true
-  pre-tasks:
+  pre_tasks:
     - name: Instalar firewalld y pip3
       ansible.builtin.package:
         name: "{{ item }}"
         state: present
       with_items:
         - firewalld
-        - python3-firewall
+        - python3-pip
 
 - name: Instalación node_exporter
   hosts: NODE_EXPORTER
