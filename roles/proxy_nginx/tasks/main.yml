@@ -17,6 +17,13 @@
   notify: Reiniciar nginx
 
 
+- name: Configurar SELinux para que permita a nginx redireccionar
+  ansible.posix.seboolean:
+    name: httpd_can_network_connect
+    state: true
+    persistent: true
+
+
 - name: Iniciar servicio
   ansible.builtin.service:
     name: nginx
