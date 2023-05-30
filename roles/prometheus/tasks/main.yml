@@ -71,5 +71,14 @@
     name: prometheus
     state: started
     enabled: true
+
+
+- name: Permitir trafico por puerto de prometheus
+  ansible.posix.firewalld:
+    port: 9090/tcp
+    state: enabled
+    permanent: true
+    immediate: true
+  when: ansible_os_family == "RedHat"
   
 ...

@@ -17,17 +17,27 @@
   notify: Reiniciar nginx
 
 
-- name: Configurar SELinux para que permita a nginx redireccionar
-  ansible.posix.seboolean:
-    name: httpd_can_network_connect
-    state: true
-    persistent: true
-
-
 - name: Iniciar servicio
   ansible.builtin.service:
     name: nginx
     state: started
     enabled: true
 
+
+- name: Firewall y SELinux en RehHat
+  when: ansible_os_family == "RedHat" 
+  block:
+    - name: Configurar SELinux para que permita a nginx redireccionar
+      ansible.posix.seboolean:
+        name: httpd_can_network_connect
+        state: true
+        persistent: true
+
+    - name: Permitir conexiones http
+      ansible.posix.firewalld:
+        service: http
+        state: enabled
+        permanent: true
+        immediate: true
+   
 ...
