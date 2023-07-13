@@ -80,7 +80,7 @@ Ejemplo de playbook.yml para la ejecución de estos roles (grafana y prometheus 
         - role: añadir_nodo
         - role: grafana
          
-		- name: Instalación y configuracion proxy nginx
+    - name: Instalación y configuracion proxy nginx
       hosts: PROXY
       become: true
       roles:
@@ -110,7 +110,7 @@ Otro ejemplo (servidor grafana en otro host):
       roles:
         - role: grafana
 
-		- name: Instalación y configuracion proxy nginx
+    - name: Instalación y configuracion proxy nginx
       hosts: PROXY
       become: true
       roles:
